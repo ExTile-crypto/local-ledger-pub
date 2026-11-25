@@ -1,0 +1,11 @@
+# the books themselves never go into git: database, uploaded documents, reports, exchange-rate cache, keys, edited skills
+data/
+# local environment, secrets and caches
+.venv/
+.env
+__pycache__/
+*.pyc
+.agents/
+*.log
+*.local.md
+tests/requests.jsonl

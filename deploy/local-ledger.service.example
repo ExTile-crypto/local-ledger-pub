@@ -1,0 +1,28 @@
+# systemd unit for running Local Ledger without Docker. Adjust the paths, the user and the address, then:
+#   sudo cp deploy/local-ledger.service.example /etc/systemd/system/local-ledger.service
+#   sudo systemctl daemon-reload && sudo systemctl enable --now local-ledger
+[Unit]
+Description=Local Ledger bookkeeping app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ledger
+Group=ledger
+WorkingDirectory=/opt/local-ledger
+Environment=HOME=/opt/local-ledger
+# see .env.example for what these mean
+Environment=LEDGER_URL=http://127.0.0.1:8890
+Environment=LEDGER_HOSTS=
+#Environment=LEDGER_PASSWORD=change-me
+ExecStart=/opt/local-ledger/.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8890
+Restart=always
+RestartSec=5
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/local-ledger
+
+[Install]
+WantedBy=multi-user.target

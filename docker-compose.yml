@@ -1,0 +1,13 @@
+# Local Ledger - copy .env.example to .env, adjust, then:  docker compose up -d
+services:
+  ledger:
+    build: .
+    restart: unless-stopped
+    ports:
+      # by default only this computer can open it; set LEDGER_BIND=0.0.0.0 (and LEDGER_PASSWORD!) to reach it from others
+      - "${LEDGER_BIND:-127.0.0.1}:${LEDGER_PORT:-8890}:8890"
+    env_file: .env
+    volumes:
+      - ./data:/data            # your books: database, uploaded documents, reports - back this folder up
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # lets the app reach a model server running on this computer
